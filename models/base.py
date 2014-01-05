@@ -24,8 +24,35 @@ class Base():
         return self._Base
 
     def get_session(self):
-        return self._Session
+        return self._Session()
 
     def create_tables(self):
         self.logger.info('Creating database...')
         self._Base.metadata.create_all(self._engine)
+
+    def remove(self):
+        self._Session.remove()
+
+
+class Result():
+
+    RESULT_TYPE_SUCCESSFUL = 1
+    RESULT_TYPE_DB_ERR = 0
+    RESULT_TYPE_VALIDATION_ERR = -1
+
+    def __init__(self):
+        self._type = self.RESULT_TYPE_SUCCESSFUL
+        self._errors = None
+
+    def set_result(self, type, errors):
+        self._type = type
+        self._errors = errors
+
+    def is_successful(self):
+        return self._type == self.RESULT_TYPE_SUCCESSFUL
+
+    def get_errors(self):
+        return self._errors
+
+    def get_type(self):
+        return self._type
